@@ -82,39 +82,25 @@ ENV FSLDIR="/opt/fsl-6.0.2" \
     FSLMACHINELIST="" \
     FSLREMOTECALL="" \
     FSLGECUDAQ="cuda.q"
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends \
-           bc \
-           dc \
-           file \
-           libfontconfig1 \
-           libfreetype6 \
-           libgl1-mesa-dev \
-           libgl1-mesa-dri \
-           libglu1-mesa-dev \
-           libgomp1 \
-           libice6 \
-           libxcursor1 \
-           libxft2 \
-           libxinerama1 \
-           libxrandr2 \
-           libxrender1 \
-           libxt6 \
-           sudo \
-           wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo "Downloading FSL ..." \
-    && mkdir -p /opt/fsl-6.0.2 \
-    && curl -fsSL --retry 5 https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.2-centos6_64.tar.gz \
-    | tar -xz -C /opt/fsl-6.0.2 --strip-components 1 \
-    && sed -i '$iecho Some packages in this Docker container are non-free' $ND_ENTRYPOINT \
-    && sed -i '$iecho If you are considering commercial use of this container, please consult the relevant license:' $ND_ENTRYPOINT \
-    && sed -i '$iecho https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence' $ND_ENTRYPOINT \
-    && sed -i '$isource $FSLDIR/etc/fslconf/fsl.sh' $ND_ENTRYPOINT
 
-RUN bash -c 'bash /opt/fsl-6.0.2/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.2'
+RUN apt update  -y && \
+    apt upgrade -y && \
+    apt install -y    \
+      python          \
+      wget            \
+      file            \
+      dc              \
+      mesa-utils      \
+      pulseaudio      \
+      libquadmath0    \
+      libgtk2.0-0     \
+      firefox         \
+      libgomp1 \
+     # && mkdir -p /opt/fsl-6.0.2 \
+    && echo "Installing FSL-6.0.7.17..."
 
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py \
+    && python ./fslinstaller.py -d "/opt/fsl-6.0.2/"
 ENV FREESURFER_HOME="/opt/freesurfer-7.3.2" \
     PATH="/opt/freesurfer-7.3.2/bin:$PATH"
 RUN apt-get update -qq \
