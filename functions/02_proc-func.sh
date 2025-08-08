@@ -59,33 +59,34 @@ source "$MICAPIPE"/functions/utilities.sh
 # Assigns variables names
 bids_variables "$BIDS" "$id" "$out" "$SES"
 
-# Check dependencies Status: POST_STRUCTURAL
-micapipe_check_dependency "post_structural" "${dir_QC}/${idBIDS}_module-post_structural.json"
-
 # Setting Surface Directory from post_structural
 post_struct_json="${proc_struct}/${idBIDS}_post_structural.json"
 recon=$(grep SurfRecon "${post_struct_json}" | awk -F '"' '{print $4}')
 set_surface_directory "${recon}"
 
-if [[ "$sesAnat" != FALSE  ]]; then
-  sesAnat=${sesAnat/ses-/}
-  BIDSanat="${subject}_ses-${sesAnat}"
-  dir_anat="${out}/${subject}/ses-${sesAnat}/anat"
+if [[ "$sesAnat" != FALSE ]]; then
+    sesAnat=${sesAnat/ses-/}
+    BIDSanat="${subject}_ses-${sesAnat}"
+    dir_anat="${out}/${subject}/ses-${sesAnat}/anat"
+    dir_anat_QC="${out}/${subject}/ses-${sesAnat}/QC"
 
-  dir_conte69="${dir_anat}/surf/conte69"
-  T1nativepro="${dir_anat}/${BIDSanat}_space-nativepro_T1w.nii.gz"
-  T1nativepro_brain="${dir_anat}/${BIDSanat}_space-nativepro_T1w_brain.nii.gz"
-  T1nativepro_mask="${dir_anat}/${BIDSanat}_space-nativepro_T1w_brain_mask.nii.gz"
-  dir_subjsurf="${dir_surf}/${subject}_ses-${sesAnat}"
-  T1surf="${dir_subjsurf}/mri/T1.mgz"
+    dir_conte69="${dir_anat}/surf/conte69"
+    T1nativepro="${dir_anat}/${BIDSanat}_space-nativepro_T1w.nii.gz"
+    T1nativepro_brain="${dir_anat}/${BIDSanat}_space-nativepro_T1w_brain.nii.gz"
+    T1nativepro_mask="${dir_anat}/${BIDSanat}_space-nativepro_T1w_brain_mask.nii.gz"
+    dir_subjsurf="${dir_surf}/${subject}_ses-${sesAnat}"
+    T1surf="${dir_subjsurf}/mri/T1.mgz"
 else
-  BIDSanat="${idBIDS}"
-  dir_anat="${proc_struct}"
+    BIDSanat="${idBIDS}"
+    dir_anat="${proc_struct}"
 fi
 subject_dir
 dir_volum="${subject_dir}/parc"
 T1_seg_subcortex="${dir_volum}/${BIDSanat}_space-nativepro_T1w_atlas-subcortical.nii.gz"
 T1_seg_cerebellum="${dir_volum}/${BIDSanat}_space-nativepro_T1w_atlas-cerebellum.nii.gz"
+
+# Check dependencies Status: POST_STRUCTURAL
+micapipe_check_dependency "post_structural" "${dir_anat_QC}/${BIDSanat}_module-post_structural.json"
 
 ### CHECK INPUTS: func, phase encoding, structural proc, topup and ICA-FIX files
 Info "Inputs:"
