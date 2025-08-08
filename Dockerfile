@@ -169,6 +169,7 @@ RUN apt-get update -qq \
            tcsh \
            xfonts-base \
            xvfb \
+           unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && curl -sSL --retry 5 -o /tmp/toinstall.deb http://launchpadlibrarian.net/160108232/libxp6_1.0.2-1ubuntu1_amd64.deb \
@@ -194,8 +195,11 @@ ENV ANTSPATH="/opt/ants-2.3.4/" \
     PATH="/opt/ants-2.3.4:$PATH"
 RUN  echo "Downloading ANTs ..." \
     && mkdir -p /opt/ants-2.3.4 \
-    && curl -fsSL https://dl.dropbox.com/s/gwf51ykkk5bifyj/ants-Linux-centos6_x86_64-v2.3.4.tar.gz \
-    | tar -xz -C /opt/ants-2.3.4 --strip-components 1
+    && curl -fsSL https://github.com/ANTsX/ANTs/releases/download/v2.6.2/ants-2.6.2-ubuntu20.04-X64-gcc.zip -o temp.zip \
+    && unzip temp.zip -d /opt/ants-2.3.4 \
+    && rm temp.zip \
+    && mv /opt/ants-2.3.4/ants2.6.2/* /opt/ants-2.3.4/ \
+    && rmdir /opt/ants-2.3.4/ants2.6.2
 
 RUN bash -c 'apt-get update && apt-get install -y gnupg2 && wget -O- http://neuro.debian.net/lists/xenial.de-fzj.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com 0xA5D32F012649A5A9 && apt-get update && apt-get install -y connectome-workbench=1.3.2-2~nd16.04+1'
 
