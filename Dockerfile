@@ -115,7 +115,8 @@ RUN apt-get update -qq \
     && rm -rf /var/lib/apt/lists/* \
     && echo "Downloading FreeSurfer ..." \
     && mkdir -p /opt/freesurfer-7.3.2 \
-    && curl -fsSL --retry 5 ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.3.2/freesurfer-linux-ubuntu18_amd64-7.3.2.tar.gz \
+    # && curl -fsSL --retry 5 ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.3.2/freesurfer-linux-ubuntu18_amd64-7.3.2.tar.gz \
+    && curl -fsSL --retry 5 ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.3.2/freesurfer-linux-ubuntu20_amd64-7.3.2.tar.gz \ 
     | tar -xz -C /opt/freesurfer-7.3.2 --strip-components 1 \
          --exclude='freesurfer/average/mult-comp-cor' \
          --exclude='freesurfer/lib/cuda' \
