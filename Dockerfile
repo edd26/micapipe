@@ -101,6 +101,7 @@ RUN apt update  -y && \
 
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py \
     && python ./fslinstaller.py -d "/opt/fsl-6.0.2/"
+
 ENV FREESURFER_HOME="/opt/freesurfer-7.3.2" \
     PATH="/opt/freesurfer-7.3.2/bin:$PATH"
 RUN apt-get update -qq \
@@ -198,8 +199,8 @@ RUN  echo "Downloading ANTs ..." \
     && curl -fsSL https://github.com/ANTsX/ANTs/releases/download/v2.6.2/ants-2.6.2-ubuntu20.04-X64-gcc.zip -o temp.zip \
     && unzip temp.zip -d /opt/ants-2.3.4 \
     && rm temp.zip \
-    && mv /opt/ants-2.3.4/ants2.6.2/* /opt/ants-2.3.4/ \
-    && rmdir /opt/ants-2.3.4/ants2.6.2
+    && mv /opt/ants-2.3.4/ants-2.6.2/* /opt/ants-2.3.4/ \
+    && rmdir /opt/ants-2.3.4/ants-2.6.2
 
 RUN bash -c 'apt-get update && apt-get install -y gnupg2 && wget -O- http://neuro.debian.net/lists/xenial.de-fzj.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com 0xA5D32F012649A5A9 && apt-get update && apt-get install -y connectome-workbench=1.3.2-2~nd16.04+1'
 
@@ -220,6 +221,7 @@ RUN export PATH="/opt/miniconda-22.11.1/bin:$PATH" \
     && conda config --system --set auto_update_conda false \
     && conda config --system --set show_channel_urls true \
     && sync && conda clean -y --all && sync
+
 RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
     && conda create -y -q --name micapipe \
     && bash -c "source activate micapipe \
