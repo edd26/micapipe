@@ -219,10 +219,24 @@ RUN export PATH="/opt/miniconda-22.11.1/bin:$PATH" \
     && conda config --system --prepend channels conda-forge \
     && conda config --system --set auto_update_conda false \
     && conda config --system --set show_channel_urls true \
-    && sync && conda clean -y --all && sync \
+    && sync && conda clean -y --all && sync
+RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
     && conda create -y -q --name micapipe \
-    && conda install -y -q --name micapipe \
-           "python" \
+    && bash -c "source activate micapipe \
+    &&   pip install --no-cache-dir  \
+             "argparse==1.1" \
+             "brainspace==0.1.10" \
+             "tedana==0.0.12" \
+             "duecredit" \
+             "pyhanko==0.17.2" \
+             "mapca==0.0.3" \
+             "xhtml2pdf==0.2.9" \
+             "oscrypto==1.3.0" \
+             "tzdata==2022.7" \
+             "arabic-reshaper==3.0.0" \
+             "cssselect2==0.7.0" \
+             "pygeodesic==0.1.8" \
+             "seaborn==0.11.2"\
            "aiohttp" \
            "aiosignal" \
            "asn1crypto" \
@@ -253,7 +267,12 @@ RUN export PATH="/opt/miniconda-22.11.1/bin:$PATH" \
            "numpy==1.21.5" \
            "packaging" \
            "pandas==1.4.4" \
-           "pillow" \
+           "pillow""
+
+RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
+    # && conda install -y -q --name micapipe \
+    && bash -c "source activate micapipe \
+    &&   pip install --no-cache-dir  \
            "pycparser" \
            "pyhanko-certvalidator" \
            "pyparsing" \
@@ -284,23 +303,23 @@ RUN export PATH="/opt/miniconda-22.11.1/bin:$PATH" \
            "wslink" \
            "yarl" \
            "zipp" \
-           "pyvirtualdisplay==3.0" \
+           "pyvirtualdisplay==3.0"" \
     && sync && conda clean -y --all && sync \
-    && bash -c "source activate micapipe \
-    &&   pip install --no-cache-dir  \
-             "argparse==1.1" \
-             "brainspace==0.1.10" \
-             "tedana==0.0.12" \
-             "duecredit" \
-             "pyhanko==0.17.2" \
-             "mapca==0.0.3" \
-             "xhtml2pdf==0.2.9" \
-             "oscrypto==1.3.0" \
-             "tzdata==2022.7" \
-             "arabic-reshaper==3.0.0" \
-             "cssselect2==0.7.0" \
-             "pygeodesic==0.1.8" \
-             "seaborn==0.11.2"" \
+    # && bash -c "source activate micapipe \
+    # &&   pip install --no-cache-dir  \
+    #          "argparse==1.1" \
+    #          "brainspace==0.1.10" \
+    #          "tedana==0.0.12" \
+    #          "duecredit" \
+    #          "pyhanko==0.17.2" \
+    #          "mapca==0.0.3" \
+    #          "xhtml2pdf==0.2.9" \
+    #          "oscrypto==1.3.0" \
+    #          "tzdata==2022.7" \
+    #          "arabic-reshaper==3.0.0" \
+    #          "cssselect2==0.7.0" \
+    #          "pygeodesic==0.1.8" \
+    #          "seaborn==0.11.2"" \
     && rm -rf ~/.cache/pip/* \
     && sync \
     && sed -i '$isource activate micapipe' $ND_ENTRYPOINT
